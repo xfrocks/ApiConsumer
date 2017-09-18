@@ -83,6 +83,23 @@ class Common extends AbstractProvider
         return $oauth;
     }
 
+    public function renderConfig(ConnectedAccountProvider $provider)
+    {
+        return \XF::app()->templater()->renderTemplate('admin:connected_account_provider_bdapi_consumer', [
+            'options' => $this->getEffectiveOptions($provider->options)
+        ]);
+    }
+
+    public function renderAssociated(ConnectedAccountProvider $provider, \XF\Entity\User $user)
+    {
+        return \XF::app()->templater()->renderTemplate('public:connected_account_associated_bdapi_consumer', [
+            'provider' => $provider,
+            'user' => $user,
+            'providerData' => $provider->getUserInfo($user),
+            'connectedAccounts' => $user->Profile->connected_accounts
+        ]);
+    }
+
     /**
      * @return null|\XF\Entity\ConnectedAccountProvider
      */

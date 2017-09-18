@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<options>
+  <option option_id="bdapi_consumer_autoLogin" edit_format="radio" data_type="unsigned_integer">
+    <default_value>1</default_value>
+    <edit_format_params>1={{ phrase('yes') }}
+0={{ phrase('no') }}</edit_format_params>
+    <relation group_id="bdApiConsumer" display_order="150"/>
+  </option>
+  <option option_id="bdapi_consumer_autoRegister" edit_format="radio" data_type="string">
+    <default_value>off</default_value>
+    <edit_format_params>off={{ phrase('bdapi_consumer_auto_register_off') }}
+on={{ phrase('bdapi_consumer_auto_register_on') }}
+id_sync={{ phrase('bdapi_consumer_auto_register_id_sync') }}</edit_format_params>
+    <relation group_id="bdApiConsumer" display_order="120"/>
+  </option>
+  <option option_id="bdapi_consumer_bypassRegistrationActive" edit_format="onoff" data_type="unsigned_integer">
+    <default_value>0</default_value>
+    <relation group_id="bdApiConsumer" display_order="110"/>
+  </option>
+</options>

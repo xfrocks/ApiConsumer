@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+  <template type="admin" title="bdapi_consumer_connected_account_provider_add" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:title>{{ phrase('bdapi_consumer_add_new_provider') }}</xf:title>
+
+<xf:form action="{{ link('connected-accounts/add-save', $provider) }}" ajax="true" class="block">
+	<div class="block-container">
+		<div class="block-body">
+			{{ $provider.renderConfig($provider)|raw }}
+		</div>
+		<xf:submitrow sticky="true" icon="save" />
+	</div>
+</xf:form>]]></template>
+  <template type="admin" title="connected_account_provider_bdapi_consumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:textboxrow name="options[app_name]" value="{$options.app_name}"
+	label="{{ phrase('bdapi_consumer_app_name') }}"
+	hint="{{ phrase('required') }}" />
+
+<xf:textboxrow name="options[root]" value="{$options.root}"
+	label="{{ phrase('bdapi_consumer_root') }}"
+	hint="{{ phrase('required') }}" />
+
+<xf:textboxrow name="options[app_id]" value="{$options.app_id}"
+	label="{{ phrase('app_id') }}"
+	hint="{{ phrase('required') }}" />
+
+<xf:textboxrow name="options[app_secret]" value="{$options.app_secret}"
+	label="{{ phrase('app_secret') }}"
+	hint="{{ phrase('required') }}" />
+
+<xf:textarearow name="options[description]" value="{$options.description}"
+	label="{{ phrase('description') }}" />
+
+<xf:checkboxrow label="{{ phrase('bdapi_consumer_required_scopes') }}">
+	<xf:option name="options[scopes][]" label="{{ phrase('bdapi_consumer_authorize_read_scope') }}"
+			   value="read" selected="{{ !empty($options.scopes.read)}}"></xf:option>
+	<xf:option name="options[scopes][]" label="{{ phrase('bdapi_consumer_authorize_post_scope') }}"
+			   value="post" selected="{{ !empty($options.scopes.post) }}"></xf:option>
+	<xf:option name="options[scopes][]" label="{{ phrase('bdapi_consumer_authorize_usercp_scope') }}"
+			   value="usercp" selected="{{ !empty($options.scopes.usercp) }}"></xf:option>
+	<xf:option name="options[scopes][]" label="{{ phrase('bdapi_consumer_authorize_conversate_scope') }}"
+			   value="conversate" selected="{{ !empty($options.scopes.conversate) }}"></xf:option>
+	<xf:option name="options[scopes][]" label="{{ phrase('bdapi_consumer_authorize_admincp_scope') }}"
+			   value="admincp" selected="{{ !empty($options.scopes.admincp) }}"></xf:option>
+</xf:checkboxrow>]]></template>
+</templates>
