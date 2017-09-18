@@ -39,7 +39,7 @@ class Common extends AbstractProvider
             'root' => $provider->options['root'],
             'redirect' => $redirectUri ?: $this->getRedirectUri($provider),
             'title' => $provider->options['app_name'],
-            'description' => $provider->options['description']
+            'description' => isset($provider->options['description']) ? $provider->options['description'] : ''
         ];
     }
 

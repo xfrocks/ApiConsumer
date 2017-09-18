@@ -17,17 +17,17 @@ class Common extends AbstractService
 
     public function getAuthorizationEndpoint()
     {
-        return new Uri($this->baseApiUri . '/api/index.php/oauth/authorize');
+        return new Uri(rtrim($this->baseApiUri, '/') . '/oauth/authorize');
     }
 
     public function getAccessTokenEndpoint()
     {
-        return new Uri($this->baseApiUri . '/api/index.php/oauth/token');
+        return new Uri(rtrim($this->baseApiUri, '/') . '/oauth/token');
     }
 
     public function setBaseApiUrl($url)
     {
-        $this->baseApiUri = new Uri($url);
+        $this->baseApiUri = new Uri(rtrim($url, '/') . '/');
 
         return $this;
     }
@@ -65,5 +65,10 @@ class Common extends AbstractService
         $token->setExtraParams($data);
 
         return $token;
+    }
+
+    protected function getAuthorizationMethod()
+    {
+        return static::AUTHORIZATION_METHOD_HEADER_BEARER;
     }
 }
