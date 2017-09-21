@@ -10,6 +10,10 @@
 		<xf:submitrow sticky="true" icon="save" />
 	</div>
 </xf:form>]]></template>
+  <template type="public" title="connected_account_associated_bdapi_consumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<a href="{{ $providerData.profile_link }}" target="_blank">
+	<img src="{{ $providerData.avatar_url }}" width="48" alt="" />
+</a>
+<div><a href="{{ $providerData.profile_link }}" target="_blank">{{ $providerData.username ?: phrase('unknown_account') }}</a></div>]]></template>
   <template type="admin" title="connected_account_provider_bdapi_consumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:textboxrow name="options[app_name]" value="{$options.app_name}"
 	label="{{ phrase('bdapi_consumer_app_name') }}"
 	hint="{{ phrase('required') }}" />

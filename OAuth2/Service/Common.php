@@ -17,12 +17,12 @@ class Common extends AbstractService
 
     public function getAuthorizationEndpoint()
     {
-        return new Uri(rtrim($this->baseApiUri, '/') . '/oauth/authorize');
+        return new Uri($this->baseApiUri . 'oauth/authorize');
     }
 
     public function getAccessTokenEndpoint()
     {
-        return new Uri(rtrim($this->baseApiUri, '/') . '/oauth/token');
+        return new Uri($this->baseApiUri . 'oauth/token');
     }
 
     public function setBaseApiUrl($url)

@@ -2,6 +2,7 @@
 
 namespace Xfrocks\ApiConsumer\ConnectedAccount\ProviderData;
 
+use Xfrocks\ApiConsumer\Util\Arr;
 use XF\ConnectedAccount\ProviderData\AbstractProviderData;
 
 class Common extends AbstractProviderData
@@ -13,24 +14,24 @@ class Common extends AbstractProviderData
 
     public function getProviderKey()
     {
-        return $this->requestFromEndpoint('user_id');
+        return $this->retriveUserInfo('user_id');
     }
 
     public function getUsername()
     {
-        return $this->requestFromEndpoint('username');
+        return $this->retriveUserInfo('username');
     }
 
     public function getEmail()
     {
-        return $this->requestFromEndpoint('user_email');
+        return $this->retriveUserInfo('user_email');
     }
 
     public function getDob()
     {
-        $dobDay = $this->requestFromEndpoint('user_dob_day');
-        $dobMonth = $this->requestFromEndpoint('user_dob_month');
-        $dobYear = $this->requestFromEndpoint('user_dob_year');
+        $dobDay = $this->retriveUserInfo('user_dob_day');
+        $dobMonth = $this->retriveUserInfo('user_dob_month');
+        $dobYear = $this->retriveUserInfo('user_dob_year');
 
         if (!empty($dobDay) && !empty($dobMonth) && !empty($dobYear)) {
             return [
@@ -45,21 +46,17 @@ class Common extends AbstractProviderData
 
     public function getAvatarUrl()
     {
-        $data = $this->requestFromEndpoint('links');
-        if (is_array($data) && isset($data['avatar_big'])) {
-            return $data['avatar_big'];
-        }
-
-        return null;
+        return $this->retriveUserInfo('links.avatar_big');
     }
 
     public function getProfileLink()
     {
-        $data = $this->requestFromEndpoint('links');
-        if (is_array($data) && isset($data['permalink'])) {
-            return $data['permalink'];
-        }
+        return $this->retriveUserInfo('links.permalink');
+    }
 
-        return null;
+    protected function retriveUserInfo($key)
+    {
+        $user = $this->requestFromEndpoint('user');
+        return Arr::get($user, $key);
     }
 }
