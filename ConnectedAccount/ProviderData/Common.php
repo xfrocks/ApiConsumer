@@ -2,7 +2,6 @@
 
 namespace Xfrocks\ApiConsumer\ConnectedAccount\ProviderData;
 
-use Xfrocks\ApiConsumer\Util\Arr;
 use XF\ConnectedAccount\ProviderData\AbstractProviderData;
 
 class Common extends AbstractProviderData
@@ -14,24 +13,24 @@ class Common extends AbstractProviderData
 
     public function getProviderKey()
     {
-        return $this->retriveUserInfo('user_id');
+        return $this->retrieveUserInfo('user_id');
     }
 
     public function getUsername()
     {
-        return $this->retriveUserInfo('username');
+        return $this->retrieveUserInfo('username');
     }
 
     public function getEmail()
     {
-        return $this->retriveUserInfo('user_email');
+        return $this->retrieveUserInfo('user_email');
     }
 
     public function getDob()
     {
-        $dobDay = $this->retriveUserInfo('user_dob_day');
-        $dobMonth = $this->retriveUserInfo('user_dob_month');
-        $dobYear = $this->retriveUserInfo('user_dob_year');
+        $dobDay = $this->retrieveUserInfo('user_dob_day');
+        $dobMonth = $this->retrieveUserInfo('user_dob_month');
+        $dobYear = $this->retrieveUserInfo('user_dob_year');
 
         if (!empty($dobDay) && !empty($dobMonth) && !empty($dobYear)) {
             return [
@@ -46,17 +45,33 @@ class Common extends AbstractProviderData
 
     public function getAvatarUrl()
     {
-        return $this->retriveUserInfo('links.avatar_big');
+        return $this->retrieveUserInfo('links.avatar_big');
     }
 
     public function getProfileLink()
     {
-        return $this->retriveUserInfo('links.permalink');
+        return $this->retrieveUserInfo('links.permalink');
     }
 
-    protected function retriveUserInfo($key)
+    protected function retrieveUserInfo($key)
     {
         $user = $this->requestFromEndpoint('user');
-        return Arr::get($user, $key);
+        if (!is_array($user)) {
+            return $user;
+        }
+
+        if (array_key_exists($key, $user)) {
+            return $user[$key];
+        }
+    
+        foreach (explode('.', $key) as $segment) {
+            if (array_key_exists($segment, $user)) {
+                $user = $user[$segment];
+            } else {
+                return null;
+            }
+        }
+
+        return $user;
     }
 }
