@@ -6,7 +6,7 @@
 
 <xf:pageaction>
 	<div class="buttonGroup">
-		<xf:button href="{{ link('connected-accounts/add') }}" 
+		<xf:button href="{{ link('connected-accounts/api-consumer-add') }}" 
 				   icon="add">{{ phrase('bdapi_consumer_add_new_provider') }}</xf:button>
 	</div>
 </xf:pageaction>]]></replace>

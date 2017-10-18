@@ -4,9 +4,13 @@ namespace Xfrocks\ApiConsumer\ConnectedAccount\Provider;
 
 use XF\ConnectedAccount\Provider\AbstractProvider;
 use XF\Entity\ConnectedAccountProvider;
+use Xfrocks\ApiConsumer\OAuth2\Service\Common as OAuthCommon;
 
 class Common extends AbstractProvider
 {
+    /**
+     * @var \XF\Entity\ConnectedAccountProvider[]
+     */
     protected static $providers = null;
 
     public function getOAuthServiceName()
@@ -25,8 +29,7 @@ class Common extends AbstractProvider
             'root' => '',
             'app_name' => '',
             'app_id' => '',
-            'app_secret' => '',
-            'scopes' => []
+            'app_secret' => ''
         ];
     }
 
@@ -35,7 +38,7 @@ class Common extends AbstractProvider
         return [
             'key' => $provider->options['app_id'],
             'secret' => $provider->options['app_secret'],
-            'scopes' => explode(',', $provider->options['scopes']),
+            'scopes' => $this->getOAuthRequestScopes(),
             'root' => $provider->options['root'],
             'redirect' => $redirectUri ?: $this->getRedirectUri($provider),
             'title' => $provider->options['app_name'],
@@ -74,6 +77,10 @@ class Common extends AbstractProvider
         return parent::verifyConfig($options, $error);
     }
 
+    /**
+     * @param array $config
+     * @return \Xfrocks\ApiConsumer\OAuth2\Service\Common
+     */
     public function getOAuth(array $config)
     {
         /** @var \Xfrocks\ApiConsumer\OAuth2\Service\Common $oauth */
@@ -100,13 +107,28 @@ class Common extends AbstractProvider
         ]);
     }
 
+    public function getTestTemplateName()
+    {
+        return 'admin:connected_account_provider_test_bdapi_consumer';
+    }
+
+    protected function getOAuthRequestScopes()
+    {
+        return [
+            OAuthCommon::SCOPE_READ,
+            OAuthCommon::SCOPE_POST
+        ];
+    }
+
     /**
      * @return null|\XF\Entity\ConnectedAccountProvider
      */
     public function getProvider()
     {
         if (static::$providers === null) {
-            static::$providers = \XF::repository('XF:ConnectedAccount')->findProvidersForList()->fetch();
+            static::$providers = \XF::repository('XF:ConnectedAccount')
+                ->findProvidersForList()
+                ->fetch();
         }
 
         foreach (static::$providers as $providerRef) {
@@ -116,20 +138,5 @@ class Common extends AbstractProvider
         }
 
         return null;
-    }
-
-    protected function getEffectiveOptions(array $options)
-    {
-        $options = parent::getEffectiveOptions($options);
-        if (!empty($options['scopes'])) {
-            $scopes = explode(',', $options['scopes']);
-            $options['scopes'] = array();
-
-            foreach ($scopes as $scopeRef) {
-                $options['scopes'][$scopeRef] = 1;
-            }
-        }
-
-        return $options;
     }
 }

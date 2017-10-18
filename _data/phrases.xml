@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <phrases>
+  <phrase title="bdapi_consumer_add_new_provider" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Add New Provider]]></phrase>
+  <phrase title="bdapi_consumer_app_name" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[App Name]]></phrase>
+  <phrase title="bdapi_consumer_auto_register_id_sync" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enabled with ID sync]]></phrase>
+  <phrase title="bdapi_consumer_auto_register_off" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Disabled]]></phrase>
+  <phrase title="bdapi_consumer_auto_register_on" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enabled]]></phrase>
+  <phrase title="bdapi_consumer_root" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Root]]></phrase>
   <phrase title="option.bdapi_consumer_autoLogin" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Sync logged-in cookie]]></phrase>
   <phrase title="option.bdapi_consumer_autoRegister" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Auto Register]]></phrase>
   <phrase title="option.bdapi_consumer_bypassRegistrationActive" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Bypass Registration Active Check]]></phrase>

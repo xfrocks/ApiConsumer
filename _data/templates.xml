@@ -2,7 +2,7 @@
 <templates>
   <template type="admin" title="bdapi_consumer_connected_account_provider_add" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:title>{{ phrase('bdapi_consumer_add_new_provider') }}</xf:title>
 
-<xf:form action="{{ link('connected-accounts/add-save', $provider) }}" ajax="true" class="block">
+<xf:form action="{{ link('connected-accounts/api-consumer-save', $provider) }}" ajax="true" class="block">
 	<div class="block-container">
 		<div class="block-body">
 			{{ $provider.renderConfig($provider)|raw }}
@@ -31,18 +31,26 @@
 	hint="{{ phrase('required') }}" />
 
 <xf:textarearow name="options[description]" value="{$options.description}"
-	label="{{ phrase('description') }}" />
+	label="{{ phrase('description') }}" />]]></template>
+  <template type="admin" title="connected_account_provider_test_bdapi_consumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:if is="!$providerData">
+	<xf:inforow>
+		{{ phrase('this_will_test_x_connected_account_provider_explain', {'title': $provider.title}) }}
+	</xf:inforow>
 
-<xf:checkboxrow label="{{ phrase('bdapi_consumer_required_scopes') }}">
-	<xf:option name="options[scopes][]" label="{{ phrase('bdapi_consumer_authorize_read_scope') }}"
-			   value="read" selected="{{ !empty($options.scopes.read)}}"></xf:option>
-	<xf:option name="options[scopes][]" label="{{ phrase('bdapi_consumer_authorize_post_scope') }}"
-			   value="post" selected="{{ !empty($options.scopes.post) }}"></xf:option>
-	<xf:option name="options[scopes][]" label="{{ phrase('bdapi_consumer_authorize_usercp_scope') }}"
-			   value="usercp" selected="{{ !empty($options.scopes.usercp) }}"></xf:option>
-	<xf:option name="options[scopes][]" label="{{ phrase('bdapi_consumer_authorize_conversate_scope') }}"
-			   value="conversate" selected="{{ !empty($options.scopes.conversate) }}"></xf:option>
-	<xf:option name="options[scopes][]" label="{{ phrase('bdapi_consumer_authorize_admincp_scope') }}"
-			   value="admincp" selected="{{ !empty($options.scopes.admincp) }}"></xf:option>
-</xf:checkboxrow>]]></template>
+	<xf:formrow label="{{ phrase('app_id') }}">{$provider.options.app_id}</xf:formrow>
+<xf:else />
+	<xf:inforow rowtype="confirm"><strong>{{ phrase('test_passed') }}</strong></xf:inforow>
+
+	<xf:formrow label="{{ phrase('name') }}">{{ $providerData.username ?: phrase('n_a') }}</xf:formrow>
+
+	<xf:formrow label="{{ phrase('email') }}">{{ $providerData.email ?: phrase('n_a') }}</xf:formrow>
+
+	<xf:formrow label="{{ phrase('picture') }}">
+		<xf:if is="$providerData.avatar_url">
+			<img src="{$providerData.avatar_url}" width="48" />
+		<xf:else />
+			{{ phrase('n_a') }}
+		</xf:if>
+	</xf:formrow>
+</xf:if>]]></template>
 </templates>

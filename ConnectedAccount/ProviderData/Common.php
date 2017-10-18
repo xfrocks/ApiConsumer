@@ -63,7 +63,7 @@ class Common extends AbstractProviderData
         if (array_key_exists($key, $user)) {
             return $user[$key];
         }
-    
+
         foreach (explode('.', $key) as $segment) {
             if (array_key_exists($segment, $user)) {
                 $user = $user[$segment];

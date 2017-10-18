@@ -27,7 +27,11 @@ class Common extends AbstractService
 
     public function setBaseApiUrl($url)
     {
-        $this->baseApiUri = new Uri(rtrim($url, '/') . '/');
+        $url = rtrim($url, '/');
+        if (substr($url, -9) !== 'index.php') {
+            $url .= '/index.php';
+        }
+        $this->baseApiUri = new Uri($url.'/');
 
         return $this;
     }

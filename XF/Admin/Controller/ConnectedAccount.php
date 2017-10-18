@@ -7,7 +7,7 @@ use Xfrocks\ApiConsumer\Util\Option;
 
 class ConnectedAccount extends XFCP_ConnectedAccount
 {
-    public function actionAdd()
+    public function actionApiConsumerAdd()
     {
         /** @var \XF\Entity\ConnectedAccountProvider $provider */
         $provider = $this->em()->create('XF:ConnectedAccountProvider');
@@ -25,8 +25,10 @@ class ConnectedAccount extends XFCP_ConnectedAccount
         );
     }
 
-    public function actionAddSave(ParameterBag $params)
+    public function actionApiConsumerSave(ParameterBag $params)
     {
+        $this->assertPostOnly();
+
         /** @var \XF\Entity\ConnectedAccountProvider $provider */
         $provider = $this->em()->create('XF:ConnectedAccountProvider');
         $provider->provider_id = $params->provider_id;
