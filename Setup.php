@@ -17,7 +17,8 @@ class Setup extends AbstractSetup
     {
         \XF::db()->delete(
             'xf_connected_account_provider',
-            'provider_class = ?', 'Xfrocks\ApiConsumer:Provider'
+            'provider_class = ?',
+            'Xfrocks\ApiConsumer:Provider'
         );
     }
 }

@@ -2,9 +2,7 @@
 
 namespace Xfrocks\ApiConsumer\Util;
 
-use XF\Option\AbstractOption;
-
-class Option extends AbstractOption
+class Option
 {
     /**
      * @param string $key
@@ -12,9 +10,10 @@ class Option extends AbstractOption
      */
     public static function get($key)
     {
+        $xfOptions = \XF::options();
         $key = sprintf('bdapi_consumer_%s', $key);
-        if (\XF::options()->offsetExists($key)) {
-            return \XF::options()->offsetGet($key);
+        if ($xfOptions->offsetExists($key)) {
+            return $xfOptions->offsetGet($key);
         }
 
         return null;

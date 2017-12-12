@@ -35,7 +35,7 @@ class Api
         $str .= $provider['client_secret'];
 
         $signature = md5($str);
-        return isset($data[$prefix . 'signature']) AND ($signature === $data[$prefix . 'signature']);
+        return isset($data[$prefix . 'signature']) and ($signature === $data[$prefix . 'signature']);
     }
 
     /**
@@ -47,7 +47,8 @@ class Api
      * @param array $params
      * @return array|bool|mixed
      */
-    protected static function request($method, $path, $accessToken = false, $expectedKey = false, array $params = []) {
+    protected static function request($method, $path, $accessToken = false, $expectedKey = false, array $params = [])
+    {
         $method = strtolower($method);
         if (!in_array($method, ['get', 'post', 'put', 'delete', 'patch'])) {
             return false;
