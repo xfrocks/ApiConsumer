@@ -9,15 +9,15 @@ use XF\AddOn\StepRunnerUpgradeTrait;
 
 class Setup extends AbstractSetup
 {
-	use StepRunnerInstallTrait;
-	use StepRunnerUpgradeTrait;
-	use StepRunnerUninstallTrait;
+    use StepRunnerInstallTrait;
+    use StepRunnerUpgradeTrait;
+    use StepRunnerUninstallTrait;
 
-    protected function uninstallStep1()
+    public function uninstallStep1()
     {
         \XF::db()->delete(
             'xf_connected_account_provider',
-            'provider_class = ' . \XF::db()->quote('Xfrocks\ApiConsumer:Provider\Common')
+            'provider_class = ?', 'Xfrocks\ApiConsumer:Provider'
         );
     }
 }
