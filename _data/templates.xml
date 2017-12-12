@@ -1,56 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-  <template type="admin" title="bdapi_consumer_connected_account_provider_add" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:title>{{ phrase('bdapi_consumer_add_new_provider') }}</xf:title>
-
-<xf:form action="{{ link('connected-accounts/api-consumer-save', $provider) }}" ajax="true" class="block">
-	<div class="block-container">
-		<div class="block-body">
-			{{ $provider.renderConfig($provider)|raw }}
-		</div>
-		<xf:submitrow sticky="true" icon="save" />
-	</div>
-</xf:form>]]></template>
-  <template type="public" title="connected_account_associated_bdapi_consumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<a href="{{ $providerData.profile_link }}" target="_blank">
+  <template type="public" title="bdapi_consumer_connected_account_associated" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<a href="{{ $providerData.profile_link }}" target="_blank">
 	<img src="{{ $providerData.avatar_url }}" width="48" alt="" />
 </a>
 <div><a href="{{ $providerData.profile_link }}" target="_blank">{{ $providerData.username ?: phrase('unknown_account') }}</a></div>]]></template>
-  <template type="admin" title="connected_account_provider_bdapi_consumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:textboxrow name="options[app_name]" value="{$options.app_name}"
-	label="{{ phrase('bdapi_consumer_app_name') }}"
-	hint="{{ phrase('required') }}" />
+  <template type="admin" title="bdapi_consumer_connected_account_provider" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:textboxrow name="options[app_name]" value="{$options.app_name}"
+               label="{{ phrase('bdapi_consumer_app_name') }}"
+               hint="{{ phrase('required') }}"/>
 
 <xf:textboxrow name="options[root]" value="{$options.root}"
-	label="{{ phrase('bdapi_consumer_root') }}"
-	hint="{{ phrase('required') }}" />
+               label="{{ phrase('bdapi_consumer_root') }}"
+               hint="{{ phrase('required') }}"/>
 
 <xf:textboxrow name="options[app_id]" value="{$options.app_id}"
-	label="{{ phrase('app_id') }}"
-	hint="{{ phrase('required') }}" />
+               label="{{ phrase('app_id') }}"
+               hint="{{ phrase('required') }}"
+               autocomplete="off"/>
 
 <xf:textboxrow name="options[app_secret]" value="{$options.app_secret}"
-	label="{{ phrase('app_secret') }}"
-	hint="{{ phrase('required') }}" />
+               label="{{ phrase('app_secret') }}"
+               hint="{{ phrase('required') }}"
+               autocomplete="off"/>
 
 <xf:textarearow name="options[description]" value="{$options.description}"
-	label="{{ phrase('description') }}" />]]></template>
-  <template type="admin" title="connected_account_provider_test_bdapi_consumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:if is="!$providerData">
-	<xf:inforow>
-		{{ phrase('this_will_test_x_connected_account_provider_explain', {'title': $provider.title}) }}
-	</xf:inforow>
+                label="{{ phrase('description') }}"/>]]></template>
+  <template type="admin" title="bdapi_consumer_connected_account_provider_add" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:title>{{ phrase('bdapi_consumer_add_new_provider') }}</xf:title>
 
-	<xf:formrow label="{{ phrase('app_id') }}">{$provider.options.app_id}</xf:formrow>
-<xf:else />
-	<xf:inforow rowtype="confirm"><strong>{{ phrase('test_passed') }}</strong></xf:inforow>
+<xf:form action="{{ link('connected-accounts/api-consumer-save', $provider) }}" ajax="true" class="block">
+    <div class="block-container">
+        <div class="block-body">
+            {{ $provider.renderConfig($provider)|raw }}
+        </div>
+        <xf:submitrow sticky="true" icon="save"/>
+    </div>
+</xf:form>]]></template>
+  <template type="admin" title="bdapi_consumer_connected_account_provider_test" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:if is="!$providerData">
+    <xf:inforow>
+        {{ phrase('this_will_test_x_connected_account_provider_explain', {'title': $provider.title}) }}
+    </xf:inforow>
 
-	<xf:formrow label="{{ phrase('name') }}">{{ $providerData.username ?: phrase('n_a') }}</xf:formrow>
+    <xf:formrow label="{{ phrase('app_id') }}">{$provider.options.app_id}</xf:formrow>
+    <xf:else/>
+    <xf:inforow rowtype="confirm"><strong>{{ phrase('test_passed') }}</strong></xf:inforow>
 
-	<xf:formrow label="{{ phrase('email') }}">{{ $providerData.email ?: phrase('n_a') }}</xf:formrow>
+    <xf:formrow label="{{ phrase('name') }}">{{ $providerData.username ?: phrase('n_a') }}</xf:formrow>
 
-	<xf:formrow label="{{ phrase('picture') }}">
-		<xf:if is="$providerData.avatar_url">
-			<img src="{$providerData.avatar_url}" width="48" />
-		<xf:else />
-			{{ phrase('n_a') }}
-		</xf:if>
-	</xf:formrow>
+    <xf:formrow label="{{ phrase('email') }}">{{ $providerData.email ?: phrase('n_a') }}</xf:formrow>
+
+    <xf:formrow label="{{ phrase('picture') }}">
+        <xf:if is="$providerData.avatar_url">
+            <img src="{$providerData.avatar_url}" width="48"/>
+            <xf:else/>
+            {{ phrase('n_a') }}
+        </xf:if>
+    </xf:formrow>
 </xf:if>]]></template>
 </templates>

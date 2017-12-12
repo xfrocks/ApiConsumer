@@ -1,10 +1,10 @@
 <?php
 
-namespace Xfrocks\ApiConsumer\ConnectedAccount\ProviderData;
+namespace Xfrocks\ApiConsumer\ConnectedAccount;
 
 use XF\ConnectedAccount\ProviderData\AbstractProviderData;
 
-class Common extends AbstractProviderData
+class ProviderData extends AbstractProviderData
 {
     public function getDefaultEndpoint()
     {

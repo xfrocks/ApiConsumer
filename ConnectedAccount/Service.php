@@ -1,13 +1,13 @@
 <?php
 
-namespace Xfrocks\ApiConsumer\OAuth2\Service;
+namespace Xfrocks\ApiConsumer\ConnectedAccount;
 
 use OAuth\OAuth2\Token\StdOAuth2Token;
 use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\Common\Http\Uri\Uri;
 use OAuth\OAuth2\Service\AbstractService;
 
-class Common extends AbstractService
+class Service extends AbstractService
 {
     const SCOPE_READ = 'read';
     const SCOPE_POST = 'post';

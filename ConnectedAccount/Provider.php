@@ -1,12 +1,13 @@
 <?php
 
-namespace Xfrocks\ApiConsumer\ConnectedAccount\Provider;
+namespace Xfrocks\ApiConsumer\ConnectedAccount;
 
 use XF\ConnectedAccount\Provider\AbstractProvider;
 use XF\Entity\ConnectedAccountProvider;
-use Xfrocks\ApiConsumer\OAuth2\Service\Common as OAuthCommon;
+use XF\Entity\User;
+use Xfrocks\ApiConsumer\XF\ConnectedAccount\Storage\StorageState;
 
-class Common extends AbstractProvider
+class Provider extends AbstractProvider
 {
     /**
      * @var \XF\Entity\ConnectedAccountProvider[]
@@ -15,12 +16,12 @@ class Common extends AbstractProvider
 
     public function getOAuthServiceName()
     {
-        return 'Xfrocks\ApiConsumer\OAuth2\Service\Common';
+        return 'Xfrocks\ApiConsumer:Service';
     }
 
     public function getProviderDataClass()
     {
-        return 'Xfrocks\ApiConsumer:ProviderData\Common';
+        return 'Xfrocks\ApiConsumer:ProviderData';
     }
 
     public function getDefaultOptions()
@@ -77,13 +78,9 @@ class Common extends AbstractProvider
         return parent::verifyConfig($options, $error);
     }
 
-    /**
-     * @param array $config
-     * @return \Xfrocks\ApiConsumer\OAuth2\Service\Common
-     */
     public function getOAuth(array $config)
     {
-        /** @var \Xfrocks\ApiConsumer\OAuth2\Service\Common $oauth */
+        /** @var Service $oauth */
         $oauth = parent::getOAuth($config);
         $oauth->setBaseApiUrl($config['root']);
 
@@ -92,37 +89,37 @@ class Common extends AbstractProvider
 
     public function renderConfig(ConnectedAccountProvider $provider)
     {
-        return \XF::app()->templater()->renderTemplate('admin:connected_account_provider_bdapi_consumer', [
-            'options' => $this->getEffectiveOptions($provider->options)
-        ]);
+        $template = 'admin:bdapi_consumer_connected_account_provider';
+        $params = ['options' => $this->getEffectiveOptions($provider->options)];
+        return \XF::app()->templater()->renderTemplate($template, $params);
     }
 
     public function renderAssociated(ConnectedAccountProvider $provider, \XF\Entity\User $user)
     {
-        return \XF::app()->templater()->renderTemplate('public:connected_account_associated_bdapi_consumer', [
+        $template = 'public:bdapi_consumer_connected_account_associated';
+        $params = [
             'provider' => $provider,
             'user' => $user,
             'providerData' => $provider->getUserInfo($user),
             'connectedAccounts' => $user->Profile->connected_accounts
-        ]);
+        ];
+
+        return \XF::app()->templater()->renderTemplate($template, $params);
     }
 
     public function getTestTemplateName()
     {
-        return 'admin:connected_account_provider_test_bdapi_consumer';
+        return 'admin:bdapi_consumer_connected_account_provider_test';
     }
 
     protected function getOAuthRequestScopes()
     {
         return [
-            OAuthCommon::SCOPE_READ,
-            OAuthCommon::SCOPE_POST
+            Service::SCOPE_READ,
+            Service::SCOPE_POST
         ];
     }
 
-    /**
-     * @return null|\XF\Entity\ConnectedAccountProvider
-     */
     public function getProvider()
     {
         if (static::$providers === null) {
