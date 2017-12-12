@@ -8,7 +8,7 @@ class Common extends AbstractProviderData
 {
     public function getDefaultEndpoint()
     {
-        return 'users/me';
+        return 'index.php?users/me';
     }
 
     public function getProviderKey()
