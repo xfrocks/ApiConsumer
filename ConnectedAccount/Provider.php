@@ -16,12 +16,12 @@ class Provider extends AbstractProvider
 
     public function getOAuthServiceName()
     {
-        return 'Xfrocks\ApiConsumer:Service';
+        return $this->providerId;
     }
 
     public function getProviderDataClass()
     {
-        return 'Xfrocks\ApiConsumer:ProviderData';
+        return $this->providerId;
     }
 
     public function getDefaultOptions()
@@ -76,15 +76,6 @@ class Provider extends AbstractProvider
         }
 
         return parent::verifyConfig($options, $error);
-    }
-
-    public function getOAuth(array $config)
-    {
-        /** @var Service $oauth */
-        $oauth = parent::getOAuth($config);
-        $oauth->setBaseApiUrl($config['root']);
-
-        return $oauth;
     }
 
     public function renderConfig(ConnectedAccountProvider $provider)

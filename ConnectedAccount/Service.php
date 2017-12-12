@@ -15,23 +15,43 @@ class Service extends AbstractService
     const SCOPE_CONVERSTATE = 'converstate';
     const SCOPE_ADMINCP = 'admincp';
 
+    protected $providerId = null;
+
     public function getAuthorizationEndpoint()
     {
+        if ($this->baseApiUri === null) {
+            throw new \RuntimeException('Base API URI must be setup before usage');
+        }
+
         return new Uri($this->baseApiUri . 'index.php?oauth/authorize');
     }
 
     public function getAccessTokenEndpoint()
     {
+        if ($this->baseApiUri === null) {
+            throw new \RuntimeException('Base API URI must be setup before usage');
+        }
+
         return new Uri($this->baseApiUri . 'index.php?oauth/token');
     }
 
-    public function setBaseApiUrl($url)
+    public function service()
     {
-        $url = preg_replace('#index\.php$#', '', $url);
-        $url = rtrim($url, '/') . '/';
-        $this->baseApiUri = new Uri($url);
+        if ($this->providerId === null) {
+            throw new \RuntimeException('Provider ID must be setup before usage');
+        }
 
-        return $this;
+        return $this->providerId;
+    }
+
+    public function updateProviderIdAndConfig($providerId, array $config)
+    {
+        $this->providerId = $providerId;
+
+        $baseApiUri = preg_replace('#index\.php$#', '', $config['root']);
+        $baseApiUri = rtrim($baseApiUri, '/') . '/';
+        $baseApiUri = new Uri($baseApiUri);
+        $this->baseApiUri = $baseApiUri;
     }
 
     /**
