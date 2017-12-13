@@ -9,6 +9,7 @@ use Xfrocks\ApiConsumer\XF\ConnectedAccount\Storage\StorageState;
 
 class Provider extends AbstractProvider
 {
+    const PROVIDER_CLASS = 'Xfrocks\ApiConsumer:Provider';
     const PROVIDER_ID_PREFIX = 'bdapi_';
 
     /**

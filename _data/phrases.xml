@@ -17,7 +17,7 @@
  - Disabled: do nothing.<br>
  - Enabled: after authorization, external user will have an account immediately with data from external site. If there is a conflict, user will be asked as usual.<br>
  - Enabled with ID sync: similar to `Enabled` but external user ID will be included in conflict check.]]></phrase>
-  <phrase title="option_explain.bdapi_consumer_bypassRegistrationActive" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enabling this option will allow users who came from external sites to register regardless of the <a href="admin.php?options/list/usersAndRegistration" target="_blank" tabindex="-1">"Enable Registration" option</a>.]]></phrase>
+  <phrase title="option_explain.bdapi_consumer_bypassRegistrationActive" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enabling this option will allow users who came from external sites to register regardless of the <a href="admin.php?options/groups/usersAndRegistration/" target="_blank" tabindex="-1">"Enable registration" option</a>.]]></phrase>
   <phrase title="option_group.bdApiConsumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[[bd] API Consumer]]></phrase>
   <phrase title="option_group_description.bdApiConsumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[]]></phrase>
 </phrases>

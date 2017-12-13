@@ -8,13 +8,11 @@ use Xfrocks\ApiConsumer\ConnectedAccount\Provider;
 
 class ConnectedAccount extends XFCP_ConnectedAccount
 {
-    const XFROCKS_API_CONSUMER_PROVIDER_CLASS = 'Xfrocks\ApiConsumer:Provider';
-
     public function actionApiConsumerAdd()
     {
         /** @var ConnectedAccountProvider $provider */
         $provider = $this->em()->create('XF:ConnectedAccountProvider');
-        $provider->provider_class = self::XFROCKS_API_CONSUMER_PROVIDER_CLASS;
+        $provider->provider_class = Provider::PROVIDER_CLASS;
 
         $viewParams = [
             'provider' => $provider
@@ -39,7 +37,7 @@ class ConnectedAccount extends XFCP_ConnectedAccount
         /** @var ConnectedAccountProvider $provider */
         $provider = $this->em()->create('XF:ConnectedAccountProvider');
         $provider->provider_id = Provider::PROVIDER_ID_PREFIX . $providerId;
-        $provider->provider_class = self::XFROCKS_API_CONSUMER_PROVIDER_CLASS;
+        $provider->provider_class = Provider::PROVIDER_CLASS;
 
         $this->providerSaveProcess($provider)->run();
 
