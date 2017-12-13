@@ -6,6 +6,65 @@ use XF\ConnectedAccount\ProviderData\AbstractProviderData;
 
 class ProviderData extends AbstractProviderData
 {
+    /**
+     * @return array|null
+     * @see Register::getConnectedRegistrationInput
+     */
+    public function getAutoRegistrationInput()
+    {
+        $username = $this->getUsername();
+        $email = $this->getEmail();
+        if (empty($username) || empty($email)) {
+            return null;
+        }
+
+        $input = [
+            'username' => $username,
+            'email' => $email,
+        ];
+
+        $dob = $this->getDob();
+        if (is_array($dob)) {
+            $input += $dob;
+        }
+
+        $user = $this->requestFromEndpoint('user');
+        if (!is_array($user)) {
+            return $input;
+        }
+
+        if (isset($user['user_timezone_offset'])) {
+            $timezoneOffset = $user['user_timezone_offset'];
+            if (is_int($timezoneOffset)) {
+                $timezone = timezone_name_from_abbr('', $timezoneOffset * 3600, 0);
+                if (is_string($timezone)) {
+                    $input['timezone'] = $timezone;
+                }
+            }
+        }
+
+        if (isset($user['fields']) && is_array($user['fields'])) {
+            $input['custom_fields'] = [];
+            foreach ($user['fields'] as $providerUserField) {
+                if (!is_array($providerUserField) ||
+                    empty($providerUserField['id']) ||
+                    empty($providerUserField['value'])) {
+                    continue;
+                }
+
+                switch ($providerUserField['id']) {
+                    case 'location':
+                        $input[$providerUserField['id']] = $providerUserField['value'];
+                        break;
+                    default:
+                        $input['custom_fields'][$providerUserField['id']] = $providerUserField['value'];
+                }
+            }
+        }
+
+        return $input;
+    }
+
     public function getDefaultEndpoint()
     {
         return 'index.php?users/me';
@@ -13,24 +72,29 @@ class ProviderData extends AbstractProviderData
 
     public function getProviderKey()
     {
-        return $this->retrieveUserInfo('user_id');
+        return $this->getUserId();
+    }
+
+    public function getUserId()
+    {
+        return $this->getUserDataByKeys('user_id');
     }
 
     public function getUsername()
     {
-        return $this->retrieveUserInfo('username');
+        return $this->getUserDataByKeys('username');
     }
 
     public function getEmail()
     {
-        return $this->retrieveUserInfo('user_email');
+        return $this->getUserDataByKeys('user_email');
     }
 
     public function getDob()
     {
-        $dobDay = $this->retrieveUserInfo('user_dob_day');
-        $dobMonth = $this->retrieveUserInfo('user_dob_month');
-        $dobYear = $this->retrieveUserInfo('user_dob_year');
+        $dobDay = $this->getUserDataByKeys('user_dob_day');
+        $dobMonth = $this->getUserDataByKeys('user_dob_month');
+        $dobYear = $this->getUserDataByKeys('user_dob_year');
 
         if (!empty($dobDay) && !empty($dobMonth) && !empty($dobYear)) {
             return [
@@ -45,33 +109,32 @@ class ProviderData extends AbstractProviderData
 
     public function getAvatarUrl()
     {
-        return $this->retrieveUserInfo('links.avatar_big');
+        return $this->getUserDataByKeys('links', 'avatar_big');
     }
 
     public function getProfileLink()
     {
-        return $this->retrieveUserInfo('links.permalink');
+        return $this->getUserDataByKeys('links', 'permalink');
     }
 
-    protected function retrieveUserInfo($key)
+    private function getUserDataByKeys()
     {
+        $keys = func_get_args();
+
         $user = $this->requestFromEndpoint('user');
         if (!is_array($user)) {
-            return $user;
+            return null;
         }
 
-        if (array_key_exists($key, $user)) {
-            return $user[$key];
-        }
-
-        foreach (explode('.', $key) as $segment) {
-            if (array_key_exists($segment, $user)) {
-                $user = $user[$segment];
-            } else {
+        $value = $user;
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $value)) {
                 return null;
             }
+
+            $value = $value[$key];
         }
 
-        return $user;
+        return $value;
     }
 }

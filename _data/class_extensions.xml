@@ -2,5 +2,7 @@
 <class_extensions>
   <extension from_class="XF\Admin\Controller\ConnectedAccount" to_class="Xfrocks\ApiConsumer\XF\Admin\Controller\ConnectedAccount" execute_order="10" active="1"/>
   <extension from_class="XF\Pub\Controller\Register" to_class="Xfrocks\ApiConsumer\XF\Pub\Controller\Register" execute_order="10" active="1"/>
+  <extension from_class="XF\Repository\ConnectedAccount" to_class="Xfrocks\ApiConsumer\XF\Repository\ConnectedAccount" execute_order="10" active="1"/>
+  <extension from_class="XF\Service\User\Registration" to_class="Xfrocks\ApiConsumer\XF\Service\User\Registration" execute_order="10" active="1"/>
   <extension from_class="XF\SubContainer\OAuth" to_class="Xfrocks\ApiConsumer\XF\SubContainer\OAuth" execute_order="10" active="1"/>
 </class_extensions>
