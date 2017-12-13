@@ -7,6 +7,10 @@ use Xfrocks\ApiConsumer\ConnectedAccount\Service;
 
 class OAuth extends XFCP_OAuth
 {
+    /**
+     * Use string instead of the constant here to avoid loading the class into memory unnecessary.
+     * @see Provider::PROVIDER_ID_PREFIX
+     */
     public function initialize()
     {
         parent::initialize();

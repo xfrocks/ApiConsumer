@@ -5,6 +5,8 @@
   <phrase title="bdapi_consumer_auto_register_id_sync" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enabled with ID sync]]></phrase>
   <phrase title="bdapi_consumer_auto_register_off" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Disabled]]></phrase>
   <phrase title="bdapi_consumer_auto_register_on" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enabled]]></phrase>
+  <phrase title="bdapi_consumer_provider_id" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Provider ID]]></phrase>
+  <phrase title="bdapi_consumer_provider_id_explain" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Leave blank to have it generated automatically for you.]]></phrase>
   <phrase title="bdapi_consumer_root" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Root]]></phrase>
   <phrase title="option.bdapi_consumer_autoLogin" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Sync logged-in cookie]]></phrase>
   <phrase title="option.bdapi_consumer_autoRegister" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Auto Register]]></phrase>

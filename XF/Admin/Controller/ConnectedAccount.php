@@ -2,8 +2,9 @@
 
 namespace Xfrocks\ApiConsumer\XF\Admin\Controller;
 
+use XF\Entity\ConnectedAccountProvider;
 use XF\Mvc\ParameterBag;
-use Xfrocks\ApiConsumer\Util\Option;
+use Xfrocks\ApiConsumer\ConnectedAccount\Provider;
 
 class ConnectedAccount extends XFCP_ConnectedAccount
 {
@@ -11,9 +12,8 @@ class ConnectedAccount extends XFCP_ConnectedAccount
 
     public function actionApiConsumerAdd()
     {
-        /** @var \XF\Entity\ConnectedAccountProvider $provider */
+        /** @var ConnectedAccountProvider $provider */
         $provider = $this->em()->create('XF:ConnectedAccountProvider');
-        $provider->provider_id = Option::getRandomProviderId();
         $provider->provider_class = self::XFROCKS_API_CONSUMER_PROVIDER_CLASS;
 
         $viewParams = [
@@ -21,7 +21,7 @@ class ConnectedAccount extends XFCP_ConnectedAccount
         ];
 
         return $this->view(
-            'XF:ConnectedAccount\Add',
+            'Xfrocks/ApiConsumer:ConnectedAccount\Add',
             'bdapi_consumer_connected_account_provider_add',
             $viewParams
         );
@@ -31,9 +31,14 @@ class ConnectedAccount extends XFCP_ConnectedAccount
     {
         $this->assertPostOnly();
 
-        /** @var \XF\Entity\ConnectedAccountProvider $provider */
+        $providerId = $this->filter('provider_id', 'str');
+        if (empty($providerId)) {
+            $providerId = Provider::getRandomProviderId();
+        }
+
+        /** @var ConnectedAccountProvider $provider */
         $provider = $this->em()->create('XF:ConnectedAccountProvider');
-        $provider->provider_id = $params->provider_id;
+        $provider->provider_id = Provider::PROVIDER_ID_PREFIX . $providerId;
         $provider->provider_class = self::XFROCKS_API_CONSUMER_PROVIDER_CLASS;
 
         $this->providerSaveProcess($provider)->run();

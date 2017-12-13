@@ -26,9 +26,13 @@
                 label="{{ phrase('description') }}"/>]]></template>
   <template type="admin" title="bdapi_consumer_connected_account_provider_add" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:title>{{ phrase('bdapi_consumer_add_new_provider') }}</xf:title>
 
-<xf:form action="{{ link('connected-accounts/api-consumer-save', $provider) }}" ajax="true" class="block">
+<xf:form action="{{ link('connected-accounts/api-consumer-save') }}" ajax="true" class="block">
     <div class="block-container">
         <div class="block-body">
+            <xf:textboxrow explain="{{ phrase('bdapi_consumer_provider_id_explain') }}"
+                           label="{{ phrase('bdapi_consumer_provider_id') }}"
+                           name="provider_id"/>
+
             {{ $provider.renderConfig($provider)|raw }}
         </div>
         <xf:submitrow sticky="true" icon="save"/>

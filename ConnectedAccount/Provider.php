@@ -9,6 +9,8 @@ use Xfrocks\ApiConsumer\XF\ConnectedAccount\Storage\StorageState;
 
 class Provider extends AbstractProvider
 {
+    const PROVIDER_ID_PREFIX = 'bdapi_';
+
     /**
      * @var \XF\Entity\ConnectedAccountProvider[]
      */
@@ -126,5 +128,10 @@ class Provider extends AbstractProvider
         }
 
         return null;
+    }
+
+    public static function getRandomProviderId($length = 6)
+    {
+        return \XF::generateRandomString($length);
     }
 }
