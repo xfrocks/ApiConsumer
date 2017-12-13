@@ -4,8 +4,6 @@ namespace Xfrocks\ApiConsumer\ConnectedAccount;
 
 use XF\ConnectedAccount\Provider\AbstractProvider;
 use XF\Entity\ConnectedAccountProvider;
-use XF\Entity\User;
-use Xfrocks\ApiConsumer\XF\ConnectedAccount\Storage\StorageState;
 
 class Provider extends AbstractProvider
 {
@@ -42,7 +40,7 @@ class Provider extends AbstractProvider
         return [
             'key' => $provider->options['app_id'],
             'secret' => $provider->options['app_secret'],
-            'scopes' => $this->getOAuthRequestScopes(),
+            'scopes' => [Service::SCOPE_READ],
             'root' => $provider->options['root'],
             'redirect' => $redirectUri ?: $this->getRedirectUri($provider),
             'title' => $provider->options['app_name'],
@@ -104,14 +102,6 @@ class Provider extends AbstractProvider
     public function getTestTemplateName()
     {
         return 'admin:bdapi_consumer_connected_account_provider_test';
-    }
-
-    protected function getOAuthRequestScopes()
-    {
-        return [
-            Service::SCOPE_READ,
-            Service::SCOPE_POST
-        ];
     }
 
     public function getProvider()

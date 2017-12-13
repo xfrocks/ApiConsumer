@@ -6,6 +6,11 @@
 0={{ phrase('no') }}</edit_format_params>
     <relation group_id="bdApiConsumer" display_order="150"/>
   </option>
+  <option option_id="bdapi_consumer_autoLoginSession" edit_format="callback" data_type="string" validation_class="Xfrocks\ApiConsumer\Option\Provider" validation_method="verifyProviderId">
+    <default_value/>
+    <edit_format_params>Xfrocks\ApiConsumer\Option\Provider::renderSelect</edit_format_params>
+    <relation group_id="bdApiConsumer" display_order="220"/>
+  </option>
   <option option_id="bdapi_consumer_autoRegister" edit_format="radio" data_type="string">
     <default_value>off</default_value>
     <edit_format_params>off={{ phrase('bdapi_consumer_auto_register_off') }}

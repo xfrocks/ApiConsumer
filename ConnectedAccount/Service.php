@@ -10,10 +10,6 @@ use OAuth\OAuth2\Service\AbstractService;
 class Service extends AbstractService
 {
     const SCOPE_READ = 'read';
-    const SCOPE_POST = 'post';
-    const SCOPE_USERCP = 'usercp';
-    const SCOPE_CONVERSTATE = 'converstate';
-    const SCOPE_ADMINCP = 'admincp';
 
     protected $providerId = null;
 
