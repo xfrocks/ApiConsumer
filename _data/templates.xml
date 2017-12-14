@@ -8,9 +8,8 @@
                label="{{ phrase('bdapi_consumer_app_name') }}"
                hint="{{ phrase('required') }}"/>
 
-<xf:textboxrow name="options[root]" value="{$options.root}"
-               label="{{ phrase('bdapi_consumer_root') }}"
-               hint="{{ phrase('required') }}"/>
+<xf:textarearow name="options[description]" value="{$options.description}"
+                label="{{ phrase('description') }}"/>
 
 <xf:textboxrow name="options[app_id]" value="{$options.app_id}"
                label="{{ phrase('app_id') }}"
@@ -22,8 +21,29 @@
                hint="{{ phrase('required') }}"
                autocomplete="off"/>
 
-<xf:textarearow name="options[description]" value="{$options.description}"
-                label="{{ phrase('description') }}"/>]]></template>
+<xf:textboxrow name="options[root]" value="{$options.root}"
+               label="{{ phrase('bdapi_consumer_root') }}"
+               hint="{{ phrase('required') }}">
+    <xf:explain>
+        <xf:if is="$options.apiRevision">
+            {{ phrase('bdapi_consumer_detected_api_revision_x', { 'api_revision': $options.apiRevision }) }}
+        </xf:if>
+        <xf:if is="$options.apiModules">
+            <xf:set var="$apiModules">
+                <xf:foreach loop="$options.apiModules" key="$module" value="$version">
+                    {$module}-{$version}
+                </xf:foreach>
+            </xf:set>
+            {{ phrase('bdapi_consumer_detected_api_modules_x', { 'api_modules': trim($apiModules) }) }}
+        </xf:if>
+    </xf:explain>
+</xf:textboxrow>
+
+<xf:checkboxrow label="">
+    <xf:option name="options[auto_login_js]" value="1" checked="{$options.auto_login_js}">
+        {{ phrase('bdapi_consumer_autoLoginJs') }}
+    </xf:option>
+</xf:checkboxrow>]]></template>
   <template type="admin" title="bdapi_consumer_connected_account_provider_add" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:title>{{ phrase('bdapi_consumer_add_new_provider') }}</xf:title>
 
 <xf:form action="{{ link('connected-accounts/api-consumer-save') }}" ajax="true" class="block">
@@ -59,4 +79,19 @@
         </xf:if>
     </xf:formrow>
 </xf:if>]]></template>
+  <template type="public" title="bdapi_consumer_helper_js_global" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:if is="$app === 'public'">
+    <xf:set var="$providers" value="{{ get_api_consumer_auto_login_providers($xf) }}"/>
+    <xf:if is="count($providers) > 0">
+        <xf:js src="Xfrocks/ApiConsumer/auto_login.js" min="1" addon="Xfrocks/ApiConsumer"/>
+        <xf:foreach loop="$providers" value="$provider">
+            <span data-xf-init="api-consumer-provider"
+                  data-client-id="{$provider.options.app_id}"
+                  data-debug="{{ $xf.debug ? 'true' : 'false' }}"
+                  data-login-link="{{ link('login/api-consumer/auto-login') }}"
+                  data-provider-id="{$provider.provider_id}"
+                  data-sdk-url="{$provider.sdkJsUrl}"></span>
+        </xf:foreach>
+    </xf:if>
+</xf:if>
+]]></template>
 </templates>

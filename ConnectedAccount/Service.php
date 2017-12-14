@@ -2,16 +2,34 @@
 
 namespace Xfrocks\ApiConsumer\ConnectedAccount;
 
-use OAuth\OAuth2\Token\StdOAuth2Token;
 use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\Common\Http\Uri\Uri;
+use OAuth\Common\Token\TokenInterface;
 use OAuth\OAuth2\Service\AbstractService;
+use OAuth\OAuth2\Token\StdOAuth2Token;
+use XF\Entity\ConnectedAccountProvider;
+use XF\Entity\UserConnectedAccount;
 
 class Service extends AbstractService
 {
     const SCOPE_READ = 'read';
 
     protected $providerId = null;
+
+    /**
+     * @param int $userId
+     * @param string $accessToken
+     * @param int $ttl
+     * @return string
+     */
+    public function generateOneTimeToken($userId = 0, $accessToken = '', $ttl = 300)
+    {
+        $timestamp = time() + $ttl;
+        $once = md5($userId . $timestamp . $accessToken . $this->credentials->getConsumerSecret());
+        $ott = sprintf('%d,%d,%s,%s', $userId, $timestamp, $once, $this->credentials->getConsumerId());
+
+        return $ott;
+    }
 
     public function getAuthorizationEndpoint()
     {
@@ -31,6 +49,40 @@ class Service extends AbstractService
         return new Uri($this->baseApiUri . 'index.php?oauth/token');
     }
 
+    /**
+     * @param ConnectedAccountProvider $provider
+     * @param UserConnectedAccount $userConnectedAccount
+     * @return TokenInterface
+     * @throws \Exception
+     * @throws \OAuth\OAuth2\Service\Exception\MissingRefreshTokenException
+     * @throws \XF\PrintableException
+     */
+    public function getFreshAccessTokenForUser($provider, $userConnectedAccount)
+    {
+        /** @var Provider $handler */
+        $handler = $provider->handler;
+        $storageState = $handler->getStorageState($provider, $userConnectedAccount->User);
+        $token = $storageState->getTokenObjectForUser();
+        if (empty($token)) {
+            return null;
+        }
+
+        if (!$token->isExpired()) {
+            return $token;
+        }
+
+        $newTokenObj = $this->refreshAccessToken($token);
+
+        if ($storageState->getStorage() !== $this->getStorage()) {
+            $storageState->storeToken($newTokenObj);
+        }
+
+        $userConnectedAccount->extra_data = $handler->getProviderData($storageState)->getExtraData();
+        $userConnectedAccount->save();
+
+        return $newTokenObj;
+    }
+
     public function service()
     {
         if ($this->providerId === null) {
@@ -40,21 +92,45 @@ class Service extends AbstractService
         return $this->providerId;
     }
 
-    public function updateProviderIdAndConfig($providerId, array $config)
+    /**
+     * @param $providerId
+     * @param array $config
+     */
+    public function updateProviderIdAndConfig($providerId, $config)
     {
         $this->providerId = $providerId;
 
-        $baseApiUri = preg_replace('#index\.php$#', '', $config['root']);
-        $baseApiUri = rtrim($baseApiUri, '/') . '/';
-        $baseApiUri = new Uri($baseApiUri);
-        $this->baseApiUri = $baseApiUri;
+        if (!empty($config['root'])) {
+            $this->baseApiUri = new Uri($config['root']);
+        }
     }
 
     /**
-     * @param string $responseBody
-     * @return StdOAuth2Token
-     * @throws TokenResponseException
+     * @param array $data
+     * @return bool
      */
+    public function verifyJsSdkSignature($data)
+    {
+        static $keySignature = 'signature';
+        if (empty($data[$keySignature])) {
+            return false;
+        }
+
+        $str = '';
+        ksort($data);
+        foreach ($data as $key => $value) {
+            if ($key === $keySignature) {
+                continue;
+            }
+
+            $str .= sprintf('%s=%s&', $key, $value);
+        }
+        $str .= $this->credentials->getConsumerSecret();
+        $signature = md5($str);
+
+        return $data[$keySignature] === $signature;
+    }
+
     protected function parseAccessTokenResponse($responseBody)
     {
         $data = @json_decode($responseBody, true);

@@ -3,10 +3,14 @@
 namespace Xfrocks\ApiConsumer\XF\Repository;
 
 use XF\ConnectedAccount\ProviderData\AbstractProviderData;
+use XF\Entity\ConnectedAccountProvider;
 use XF\Entity\User;
 use XF\Entity\UserConnectedAccount;
 use XF\Pub\Controller\Register;
+use XF\Repository\Option;
+use Xfrocks\ApiConsumer\ConnectedAccount\Provider;
 use Xfrocks\ApiConsumer\ConnectedAccount\ProviderData;
+use Xfrocks\ApiConsumer\Listener;
 use Xfrocks\ApiConsumer\XF\Service\User\Registration;
 
 class ConnectedAccount extends XFCP_ConnectedAccount
@@ -20,6 +24,7 @@ class ConnectedAccount extends XFCP_ConnectedAccount
      */
     public function getUserConnectedAccountFromProviderData(AbstractProviderData $providerData)
     {
+        /** @var UserConnectedAccount $userConnectedAccount */
         $userConnectedAccount = parent::getUserConnectedAccountFromProviderData($providerData);
 
         if ($userConnectedAccount === null) {
@@ -30,6 +35,16 @@ class ConnectedAccount extends XFCP_ConnectedAccount
                 /** @noinspection PhpParamsInspection */
                 return $this->autoRegisterApiConsumerUserConnectedAccount($autoRegister, $providerData);
             }
+        }
+
+        if ($userConnectedAccount !== null) {
+            $this->app()->session()->set(
+                Listener::SESSION_KEY_USER_CONNECTED_ACCOUNT_FROM_PROVIDER_ID,
+                [
+                    'userId' => $userConnectedAccount->User->user_id,
+                    'providerId' => $providerData->getProviderId()
+                ]
+            );
         }
 
         return $userConnectedAccount;
@@ -90,5 +105,43 @@ class ConnectedAccount extends XFCP_ConnectedAccount
         $userConnectedAccount = $this->associateConnectedAccountWithUser($user, $providerData);
 
         return $userConnectedAccount;
+    }
+
+    public function rebuildProviderCount()
+    {
+        $count = parent::rebuildProviderCount();
+        $this->rebuildApiConsumerProvidersOption();
+
+        return $count;
+    }
+
+    /**
+     * @return array
+     */
+    public function rebuildApiConsumerProvidersOption()
+    {
+        $providers = $this->finder('XF:ConnectedAccountProvider')->fetch();
+        $optionValue = [];
+        /** @var ConnectedAccountProvider $provider */
+        foreach ($providers as $provider) {
+            if ($provider->provider_class !== Provider::PROVIDER_CLASS) {
+                continue;
+            }
+
+            $providerArray = $provider->toArray();
+            $providerArray += [
+                'version' => Provider::PROVIDERS_OPTION_VERSION,
+                'time' => time(),
+                'isUsable' => $provider->isUsable()
+            ];
+
+            $optionValue[] = $providerArray;
+        }
+
+        /** @var Option $optionRepo */
+        $optionRepo = $this->repository('XF:Option');
+        $optionRepo->updateOption('bdapi_consumer_providers', $optionValue);
+
+        return $optionValue;
     }
 }

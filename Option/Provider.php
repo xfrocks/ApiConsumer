@@ -22,26 +22,6 @@ class Provider extends AbstractOption
     }
 
     /**
-     * @param string $providerId
-     * @param Option $option
-     * @return bool
-     */
-    public static function verifyProviderId(&$providerId, $option)
-    {
-        if ($providerId === '') {
-            return true;
-        }
-
-        /** @var ConnectedAccountProvider $provider */
-        $provider = \XF::em()->find('XF:ConnectedAccountProvider', $providerId);
-        if (empty($provider)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * @param Option $option
      * @param array $htmlParams
      * @return array
@@ -74,5 +54,25 @@ class Provider extends AbstractOption
             'controlOptions' => self::getControlOptions($option, $htmlParams),
             'rowOptions' => self::getRowOptions($option, $htmlParams)
         ];
+    }
+
+    /**
+     * @param string $providerId
+     * @param Option $option
+     * @return bool
+     */
+    public static function verifyProviderId(&$providerId, $option)
+    {
+        if ($providerId === '') {
+            return true;
+        }
+
+        /** @var ConnectedAccountProvider $provider */
+        $provider = \XF::em()->find('XF:ConnectedAccountProvider', $providerId);
+        if (empty($provider)) {
+            return false;
+        }
+
+        return true;
     }
 }

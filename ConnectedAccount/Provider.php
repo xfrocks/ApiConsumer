@@ -9,11 +9,69 @@ class Provider extends AbstractProvider
 {
     const PROVIDER_CLASS = 'Xfrocks\ApiConsumer:Provider';
     const PROVIDER_ID_PREFIX = 'bdapi_';
+    const PROVIDERS_OPTION_VERSION = 2017121401;
 
     /**
      * @var \XF\Entity\ConnectedAccountProvider[]
      */
     protected static $providers = null;
+
+    /**
+     * @param int $length
+     * @return string
+     */
+    public static function getRandomProviderId($length = 6)
+    {
+        return \XF::generateRandomString($length);
+    }
+
+    public function getDescription()
+    {
+        $provider = $this->getProviderArrayFromOption();
+        if ($provider !== null) {
+            return $provider['options']['description'];
+        }
+
+        return parent::getDescription();
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getProviderArrayFromOption()
+    {
+        $providers = \XF::options()->bdapi_consumer_providers;
+        foreach ($providers as $provider) {
+            if ($provider['provider_id'] === $this->providerId) {
+                return $provider;
+            }
+        }
+
+        return null;
+    }
+
+    public function getOAuthConfig(ConnectedAccountProvider $provider, $redirectUri = null)
+    {
+        return $this->getOAuthConfigFromOptions($provider->options, $redirectUri ?: $this->getRedirectUri($provider));
+    }
+
+    /**
+     * @param array $options
+     * @param string $redirectUri
+     * @return array
+     */
+    public function getOAuthConfigFromOptions($options, $redirectUri)
+    {
+        return [
+            'key' => $options['app_id'],
+            'secret' => $options['app_secret'],
+            'scopes' => [Service::SCOPE_READ],
+            'root' => $options['root'],
+            'redirect' => $redirectUri,
+            'title' => $options['app_name'],
+            'description' => isset($options['description']) ? $options['description'] : ''
+        ];
+    }
 
     public function getOAuthServiceName()
     {
@@ -25,58 +83,19 @@ class Provider extends AbstractProvider
         return $this->providerId;
     }
 
-    public function getDefaultOptions()
+    public function getTestTemplateName()
     {
-        return [
-            'root' => '',
-            'app_name' => '',
-            'app_id' => '',
-            'app_secret' => ''
-        ];
-    }
-
-    public function getOAuthConfig(ConnectedAccountProvider $provider, $redirectUri = null)
-    {
-        return [
-            'key' => $provider->options['app_id'],
-            'secret' => $provider->options['app_secret'],
-            'scopes' => [Service::SCOPE_READ],
-            'root' => $provider->options['root'],
-            'redirect' => $redirectUri ?: $this->getRedirectUri($provider),
-            'title' => $provider->options['app_name'],
-            'description' => isset($provider->options['description']) ? $provider->options['description'] : ''
-        ];
+        return 'admin:bdapi_consumer_connected_account_provider_test';
     }
 
     public function getTitle()
     {
-        $provider = $this->getProvider();
+        $provider = $this->getProviderArrayFromOption();
         if ($provider !== null) {
-            $config = $this->getOAuthConfig($provider);
-            return $config['title'];
+            return $provider['options']['app_name'];
         }
 
         return parent::getTitle();
-    }
-
-    public function getDescription()
-    {
-        $provider = $this->getProvider();
-        if ($provider !== null) {
-            $config = $this->getOAuthConfig($provider);
-            return $config['description'];
-        }
-
-        return parent::getDescription();
-    }
-
-    public function verifyConfig(array &$options, &$error = null)
-    {
-        if (!empty($options['scopes'])) {
-            $options['scopes'] = implode(',', $options['scopes']);
-        }
-
-        return parent::verifyConfig($options, $error);
     }
 
     public function renderConfig(ConnectedAccountProvider $provider)
@@ -99,30 +118,79 @@ class Provider extends AbstractProvider
         return \XF::app()->templater()->renderTemplate($template, $params);
     }
 
-    public function getTestTemplateName()
+    public function verifyConfig(array &$options, &$error = null)
     {
-        return 'admin:bdapi_consumer_connected_account_provider_test';
-    }
+        $originalOptions = $options;
 
-    public function getProvider()
-    {
-        if (static::$providers === null) {
-            static::$providers = \XF::repository('XF:ConnectedAccount')
-                ->findProvidersForList()
-                ->fetch();
+        $verified = parent::verifyConfig($options, $error);
+
+        if ($verified) {
+            if (!$this->verifyRoot($options)) {
+                $error = \XF::phrase('bdapi_consumer_root_x_cannot_be_recognized', ['root' => $options['root']]);
+                return false;
+            }
+
+            $options['description'] = $originalOptions['description'];
+            $options['auto_login_js'] = !empty($originalOptions['auto_login_js']);
         }
 
-        foreach (static::$providers as $providerRef) {
-            if ($providerRef->provider_id == $this->providerId) {
-                return $providerRef;
+        return $verified;
+    }
+
+    /**
+     * @param array $options
+     * @return bool
+     */
+    public function verifyRoot(array &$options)
+    {
+        $options['root'] = preg_replace('#index\.php$#', '', $options['root']);
+        $options['root'] = rtrim($options['root'], '/') . '/';
+
+        /** @var Service $service */
+        $service = $this->getOAuth($this->getOAuthConfigFromOptions($options, ''));
+        $client = \XF::app()->http()->client();
+        $testUrl = sprintf(
+            '%s/index.php?oauth_token=%s',
+            rtrim($options['root'], '/'),
+            $service->generateOneTimeToken()
+        );
+
+        try {
+            $response = $client->get($testUrl)->json();
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        if (empty($response['system_info']['api_revision']) || empty($response['system_info']['api_modules'])) {
+            return false;
+        }
+
+        $options['apiRevision'] = $response['system_info']['api_revision'];
+        $options['apiModules'] = $response['system_info']['api_modules'];
+        // TODO: check for specific api revision / module version?
+
+        return true;
+    }
+
+    protected function isConfigured(array $options)
+    {
+        foreach (array_keys($this->getDefaultOptions()) as $key) {
+            if (empty($options[$key])) {
+                return false;
             }
         }
 
-        return null;
+        return true;
     }
 
-    public static function getRandomProviderId($length = 6)
+    public function getDefaultOptions()
     {
-        return \XF::generateRandomString($length);
+        return [
+            'app_name' => '',
+            'app_id' => '',
+            'app_secret' => '',
+
+            'root' => ''
+        ];
     }
 }

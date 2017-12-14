@@ -11,4 +11,10 @@
 	</div>
 </xf:pageaction>]]></replace>
   </modification>
+  <modification type="public" template="helper_js_global" modification_key="bdapi_consumer_helper_js_global" description="Inject global js scripts." execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[<!--XF:JS-->]]></find>
+    <replace><![CDATA[<xf:include template="bdapi_consumer_helper_js_global" />
+$0
+]]></replace>
+  </modification>
 </template_modifications>

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <class_extensions>
   <extension from_class="XF\Admin\Controller\ConnectedAccount" to_class="Xfrocks\ApiConsumer\XF\Admin\Controller\ConnectedAccount" execute_order="10" active="1"/>
+  <extension from_class="XF\ConnectedAccount\Storage\StorageState" to_class="Xfrocks\ApiConsumer\XF\ConnectedAccount\Storage\StorageState" execute_order="10" active="1"/>
+  <extension from_class="XF\ControllerPlugin\Login" to_class="Xfrocks\ApiConsumer\XF\ControllerPlugin\Login" execute_order="10" active="1"/>
   <extension from_class="XF\Mvc\Dispatcher" to_class="Xfrocks\ApiConsumer\XF\Mvc\Dispatcher" execute_order="10" active="1"/>
+  <extension from_class="XF\Pub\Controller\GotoPage" to_class="Xfrocks\ApiConsumer\XF\Pub\Controller\GotoPage" execute_order="10" active="1"/>
+  <extension from_class="XF\Pub\Controller\Login" to_class="Xfrocks\ApiConsumer\XF\Pub\Controller\Login" execute_order="10" active="1"/>
   <extension from_class="XF\Pub\Controller\Register" to_class="Xfrocks\ApiConsumer\XF\Pub\Controller\Register" execute_order="10" active="1"/>
   <extension from_class="XF\Repository\ConnectedAccount" to_class="Xfrocks\ApiConsumer\XF\Repository\ConnectedAccount" execute_order="10" active="1"/>
   <extension from_class="XF\Service\User\Registration" to_class="Xfrocks\ApiConsumer\XF\Service\User\Registration" execute_order="10" active="1"/>
