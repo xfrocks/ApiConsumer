@@ -20,15 +20,16 @@ class Dispatcher extends XFCP_Dispatcher
             /** @var ConnectedAccountProvider $provider */
             $provider = $app->em()->find('XF:ConnectedAccountProvider', $providerId);
             if (!empty($provider) && $provider->provider_class === Provider::PROVIDER_CLASS) {
+                $requestUri = $this->request->getFullRequestUri();
                 $session->set('connectedAccountRequest', [
                     'provider' => $provider->provider_id,
-                    'returnUrl' => $this->request->getFullRequestUri(),
+                    'returnUrl' => $requestUri,
                     'test' => false
                 ]);
 
                 $handler = $provider->handler;
                 $oauth = $handler->getOAuth($handler->getOAuthConfig($provider));
-                $url = $oauth->getAuthorizationUri()->getAbsoluteUri();
+                $url = $oauth->getAuthorizationUri(['guest_redirect_uri' => $requestUri])->getAbsoluteUri();
 
                 return $this->render(new Redirect($url), 'html');
             }
