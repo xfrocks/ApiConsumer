@@ -15,6 +15,7 @@
   <phrase title="bdapi_consumer_provider_id" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Provider ID]]></phrase>
   <phrase title="bdapi_consumer_provider_id_explain" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Leave blank to have it generated automatically for you.]]></phrase>
   <phrase title="bdapi_consumer_root" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Root]]></phrase>
+  <phrase title="bdapi_consumer_root_x_cannot_be_recognized" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Provider Root {root} cannot be recognized. Please make sure you have entered it correctly. Assuming your XenForo installation is running at https://domain.com/community, the supposed API root would be https://domain.com/community/api.]]></phrase>
   <phrase title="option.bdapi_consumer_autoLoginSession" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Auto login by Session Init]]></phrase>
   <phrase title="option.bdapi_consumer_autoRegister" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Auto register]]></phrase>
   <phrase title="option.bdapi_consumer_bypassRegistrationActive" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Bypass registration active check]]></phrase>
