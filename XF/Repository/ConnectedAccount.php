@@ -21,6 +21,7 @@ class ConnectedAccount extends XFCP_ConnectedAccount
      *
      * Use string instead of the constant here to avoid loading the class into memory unnecessary.
      * @see Provider::PROVIDER_ID_PREFIX
+     * @throws \Exception
      */
     public function getUserConnectedAccountFromProviderData(AbstractProviderData $providerData)
     {
@@ -56,6 +57,7 @@ class ConnectedAccount extends XFCP_ConnectedAccount
      * @return UserConnectedAccount|null
      *
      * @see Register::setupConnectedRegistration
+     * @throws \Exception
      */
     protected function autoRegisterApiConsumerUserConnectedAccount($mode, $providerData)
     {
@@ -100,9 +102,19 @@ class ConnectedAccount extends XFCP_ConnectedAccount
             $registration->getUser()->set('user_id', $input['user_id'], ['forceSet' => true]);
         }
 
-        /** @var User $user */
-        $user = $registration->save();
-        $userConnectedAccount = $this->associateConnectedAccountWithUser($user, $providerData);
+        $db = $this->db();
+        $db->beginTransaction();
+
+        try {
+            /** @var User $user */
+            $user = $registration->save();
+            $userConnectedAccount = $this->associateConnectedAccountWithUser($user, $providerData);
+        } catch (\Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
+
+        $db->commit();
 
         return $userConnectedAccount;
     }
