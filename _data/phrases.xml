@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phrases>
+  <phrase title="bdapi_consumer_add_new_provider" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Add New Provider]]></phrase>
+  <phrase title="bdapi_consumer_app_name" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[App Name]]></phrase>
+  <phrase title="bdapi_consumer_autoLoginJs" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Auto login via JS]]></phrase>
+  <phrase title="bdapi_consumer_autoLoginJs_explain" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[List of providers will be included in automatic remote login status detection by JavaScript. If user has already logged in with one of these, the page will be refreshed to reflect the synchronized session. This option cannot be changed here, you must <a href="admin.php?connected-accounts/" target="_blank" tabindex="-1">edit each provider</a> to turn it on or off.]]></phrase>
+  <phrase title="bdapi_consumer_auto_login_user_x_requires_tfa" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Welcome back {username}, you need to finish <a href="{twoStepLink}">two step verification</a> to login.]]></phrase>
+  <phrase title="bdapi_consumer_auto_login_with_x_succeeded_y" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Welcome back {username}, you have been logged in via {provider}.]]></phrase>
+  <phrase title="bdapi_consumer_auto_register_id_sync" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enabled with ID sync]]></phrase>
+  <phrase title="bdapi_consumer_auto_register_off" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Disabled]]></phrase>
+  <phrase title="bdapi_consumer_auto_register_on" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enabled]]></phrase>
+  <phrase title="bdapi_consumer_being_auto_login_auto_register_x" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Please wait while you are being logged in via {provider}.]]></phrase>
+  <phrase title="bdapi_consumer_detected_api_modules_x" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Installed modules: {api_modules}.]]></phrase>
+  <phrase title="bdapi_consumer_detected_api_revision_x" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Detected API revision {api_revision}.]]></phrase>
+  <phrase title="bdapi_consumer_provider_id" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Provider ID]]></phrase>
+  <phrase title="bdapi_consumer_provider_id_explain" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Leave blank to have it generated automatically for you.]]></phrase>
+  <phrase title="bdapi_consumer_root" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Root]]></phrase>
+  <phrase title="bdapi_consumer_root_x_cannot_be_recognized" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Provider Root {root} cannot be recognized. Please make sure you have entered it correctly. Assuming your XenForo installation is running at https://domain.com/community, the supposed API root would be https://domain.com/community/api.]]></phrase>
+  <phrase title="option.bdapi_consumer_autoLoginSession" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Auto login by Session Init]]></phrase>
+  <phrase title="option.bdapi_consumer_autoRegister" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Auto register]]></phrase>
+  <phrase title="option.bdapi_consumer_bypassRegistrationActive" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Bypass registration active check]]></phrase>
+  <phrase title="option.bdapi_consumer_providers" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Providers]]></phrase>
+  <phrase title="option_explain.bdapi_consumer_autoLoginSession" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Choose a connected account provider to initialize user session with. User will be redirected to the remote website to capture authentication status the first time he/she visits ours. For best UX, it is recommended to:<br/>
+<br/>
+- Enable auto registration<br/>
+- Configure the API client on remote website with READ-scope auto authorization<br/>]]></phrase>
+  <phrase title="option_explain.bdapi_consumer_autoRegister" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enable this option to auto register external user after successful authentication. There are 3 modes available:<br/>
+<br/>
+ - Disabled: do nothing<br/>
+ - Enabled: after authorization, external user will have an account immediately with data from external site. If there is a conflict, user will be asked as usual<br/>
+ - Enabled with ID sync: similar to `Enabled` with new user ID matching the remote user's]]></phrase>
+  <phrase title="option_explain.bdapi_consumer_bypassRegistrationActive" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enabling this option will allow users who came from external sites to register regardless of the <a href="admin.php?options/groups/usersAndRegistration/" target="_blank" tabindex="-1">"Enable registration" option</a>.]]></phrase>
+  <phrase title="option_explain.bdapi_consumer_providers" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[]]></phrase>
+  <phrase title="option_group.bdApiConsumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[[bd] API Consumer]]></phrase>
+  <phrase title="option_group_description.bdApiConsumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[]]></phrase>
+</phrases>

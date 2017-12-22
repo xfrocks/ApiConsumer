@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+  <template type="public" title="bdapi_consumer_connected_account_associated" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<a href="{{ $providerData.profile_link }}" target="_blank">
+	<img src="{{ $providerData.avatar_url }}" width="48" alt="" />
+</a>
+<div><a href="{{ $providerData.profile_link }}" target="_blank">{{ $providerData.username ?: phrase('unknown_account') }}</a></div>]]></template>
+  <template type="admin" title="bdapi_consumer_connected_account_provider" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:textboxrow name="options[app_name]" value="{$options.app_name}"
+               label="{{ phrase('bdapi_consumer_app_name') }}"
+               hint="{{ phrase('required') }}"/>
+
+<xf:textarearow name="options[description]" value="{$options.description}"
+                label="{{ phrase('description') }}"/>
+
+<xf:textboxrow name="options[app_id]" value="{$options.app_id}"
+               label="{{ phrase('app_id') }}"
+               hint="{{ phrase('required') }}"
+               autocomplete="off"/>
+
+<xf:textboxrow name="options[app_secret]" value="{$options.app_secret}"
+               label="{{ phrase('app_secret') }}"
+               hint="{{ phrase('required') }}"
+               autocomplete="off"/>
+
+<xf:textboxrow name="options[root]" value="{$options.root}"
+               label="{{ phrase('bdapi_consumer_root') }}"
+               hint="{{ phrase('required') }}">
+    <xf:explain>
+        <xf:if is="$options.apiRevision">
+            {{ phrase('bdapi_consumer_detected_api_revision_x', { 'api_revision': $options.apiRevision }) }}
+        </xf:if>
+        <xf:if is="$options.apiModules">
+            <xf:set var="$apiModules">
+                <xf:foreach loop="$options.apiModules" key="$module" value="$version">
+                    {$module}-{$version}
+                </xf:foreach>
+            </xf:set>
+            {{ phrase('bdapi_consumer_detected_api_modules_x', { 'api_modules': trim($apiModules) }) }}
+        </xf:if>
+    </xf:explain>
+</xf:textboxrow>
+
+<xf:checkboxrow label="">
+    <xf:option name="options[auto_login_js]" value="1" checked="{$options.auto_login_js}">
+        {{ phrase('bdapi_consumer_autoLoginJs') }}
+    </xf:option>
+</xf:checkboxrow>]]></template>
+  <template type="admin" title="bdapi_consumer_connected_account_provider_add" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:title>{{ phrase('bdapi_consumer_add_new_provider') }}</xf:title>
+
+<xf:form action="{{ link('connected-accounts/api-consumer-save') }}" ajax="true" class="block">
+    <div class="block-container">
+        <div class="block-body">
+            <xf:textboxrow explain="{{ phrase('bdapi_consumer_provider_id_explain') }}"
+                           label="{{ phrase('bdapi_consumer_provider_id') }}"
+                           name="provider_id"/>
+
+            {{ $provider.renderConfig($provider)|raw }}
+        </div>
+        <xf:submitrow sticky="true" icon="save"/>
+    </div>
+</xf:form>]]></template>
+  <template type="admin" title="bdapi_consumer_connected_account_provider_test" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:if is="!$providerData">
+    <xf:inforow>
+        {{ phrase('this_will_test_x_connected_account_provider_explain', {'title': $provider.title}) }}
+    </xf:inforow>
+
+    <xf:formrow label="{{ phrase('app_id') }}">{$provider.options.app_id}</xf:formrow>
+    <xf:else/>
+    <xf:inforow rowtype="confirm"><strong>{{ phrase('test_passed') }}</strong></xf:inforow>
+
+    <xf:formrow label="{{ phrase('name') }}">{{ $providerData.username ?: phrase('n_a') }}</xf:formrow>
+
+    <xf:formrow label="{{ phrase('email') }}">{{ $providerData.email ?: phrase('n_a') }}</xf:formrow>
+
+    <xf:formrow label="{{ phrase('picture') }}">
+        <xf:if is="$providerData.avatar_url">
+            <img src="{$providerData.avatar_url}" width="48"/>
+            <xf:else/>
+            {{ phrase('n_a') }}
+        </xf:if>
+    </xf:formrow>
+</xf:if>]]></template>
+  <template type="public" title="bdapi_consumer_helper_js_global" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:if is="$app === 'public'">
+    <xf:set var="$providers" value="{{ get_api_consumer_auto_login_providers($xf) }}"/>
+    <xf:if is="count($providers) > 0">
+        <xf:js src="Xfrocks/ApiConsumer/auto_login.js" min="1" addon="Xfrocks/ApiConsumer"/>
+        <xf:foreach loop="$providers" value="$provider">
+            <span data-xf-init="api-consumer-provider"
+                  data-client-id="{$provider.options.app_id}"
+                  data-debug="{{ $xf.debug ? 'true' : 'false' }}"
+                  data-login-link="{{ link('login/api-consumer/auto-login') }}"
+                  data-provider-id="{$provider.provider_id}"
+                  data-sdk-url="{$provider.sdkJsUrl}"></span>
+        </xf:foreach>
+    </xf:if>
+</xf:if>
+]]></template>
+</templates>

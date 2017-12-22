@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_event_listeners>
+  <listener event_id="dispatcher_match" execute_order="10" callback_class="Xfrocks\ApiConsumer\Listener" callback_method="dispatcherMatch" active="1"/>
+  <listener event_id="dispatcher_post_dispatch" execute_order="10" callback_class="Xfrocks\ApiConsumer\Listener" callback_method="dispatcherPostDispatch" active="1"/>
+  <listener event_id="templater_setup" execute_order="10" callback_class="Xfrocks\ApiConsumer\Listener" callback_method="templaterSetup" active="1"/>
+</code_event_listeners>

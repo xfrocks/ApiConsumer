@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template_modifications>
+  <modification type="admin" template="connected_account_provider_list" modification_key="bdapi_consumer_addProvider" description="bdapi_consumer_addProvider" execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[<xf:title>{{ phrase('connected_account_providers') }}</xf:title>]]></find>
+    <replace><![CDATA[$0
+
+<xf:pageaction>
+	<div class="buttonGroup">
+		<xf:button href="{{ link('connected-accounts/api-consumer-add') }}" 
+				   icon="add">{{ phrase('bdapi_consumer_add_new_provider') }}</xf:button>
+	</div>
+</xf:pageaction>]]></replace>
+  </modification>
+  <modification type="public" template="helper_js_global" modification_key="bdapi_consumer_helper_js_global" description="Inject global js scripts." execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[<!--XF:JS-->]]></find>
+    <replace><![CDATA[<xf:include template="bdapi_consumer_helper_js_global" />
+$0
+]]></replace>
+  </modification>
+</template_modifications>
