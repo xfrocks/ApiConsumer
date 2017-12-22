@@ -21,7 +21,6 @@ class ConnectedAccount extends XFCP_ConnectedAccount
      *
      * Use string instead of the constant here to avoid loading the class into memory unnecessary.
      * @see Provider::PROVIDER_ID_PREFIX
-     * @throws \Exception
      */
     public function getUserConnectedAccountFromProviderData(AbstractProviderData $providerData)
     {
@@ -33,8 +32,16 @@ class ConnectedAccount extends XFCP_ConnectedAccount
             if (!empty($autoRegister) &&
                 $autoRegister !== 'off' &&
                 strpos($providerData->getProviderId(), 'bdapi_') === 0) {
-                /** @noinspection PhpParamsInspection */
-                return $this->autoRegisterApiConsumerUserConnectedAccount($autoRegister, $providerData);
+                /** @var ProviderData $ourProviderData */
+                $ourProviderData = $providerData;
+                try {
+                    $autoResult = $this->autoRegisterApiConsumerUserConnectedAccount($autoRegister, $ourProviderData);
+                    if ($autoResult !== null) {
+                        $userConnectedAccount = $autoResult;
+                    }
+                } catch (\Exception $e) {
+                    \XF::logException($e, false, __CLASS__);
+                }
             }
         }
 
