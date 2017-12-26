@@ -79,10 +79,10 @@
         </xf:if>
     </xf:formrow>
 </xf:if>]]></template>
-  <template type="public" title="bdapi_consumer_helper_js_global" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[<xf:if is="$app === 'public'">
+  <template type="public" title="bdapi_consumer_helper_js_global" version_id="2000033" version_string="2.0.0 Beta 3"><![CDATA[<xf:if is="$app === 'public'">
     <xf:set var="$providers" value="{{ get_api_consumer_auto_login_providers($xf) }}"/>
     <xf:if is="count($providers) > 0">
-        <xf:js src="Xfrocks/ApiConsumer/auto_login.js" min="1" addon="Xfrocks/ApiConsumer"/>
+        <xf:js src="Xfrocks/ApiConsumer/login.js" min="1" addon="Xfrocks/ApiConsumer"/>
         <xf:foreach loop="$providers" value="$provider">
             <span data-xf-init="api-consumer-provider"
                   data-client-id="{$provider.options.app_id}"

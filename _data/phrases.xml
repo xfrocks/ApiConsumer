@@ -19,6 +19,7 @@
   <phrase title="option.bdapi_consumer_autoLoginSession" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Auto login by Session Init]]></phrase>
   <phrase title="option.bdapi_consumer_autoRegister" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Auto register]]></phrase>
   <phrase title="option.bdapi_consumer_bypassRegistrationActive" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Bypass registration active check]]></phrase>
+  <phrase title="option.bdapi_consumer_loginRedirect" version_id="2000033" version_string="2.0.0 Beta 3"><![CDATA[Redirect login request]]></phrase>
   <phrase title="option.bdapi_consumer_providers" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Providers]]></phrase>
   <phrase title="option_explain.bdapi_consumer_autoLoginSession" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Choose a connected account provider to initialize user session with. User will be redirected to the remote website to capture authentication status the first time he/she visits ours. For best UX, it is recommended to:<br/>
 <br/>
@@ -30,6 +31,7 @@
  - Enabled: after authorization, external user will have an account immediately with data from external site. If there is a conflict, user will be asked as usual<br/>
  - Enabled with ID sync: similar to `Enabled` with new user ID matching the remote user's]]></phrase>
   <phrase title="option_explain.bdapi_consumer_bypassRegistrationActive" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[Enabling this option will allow users who came from external sites to register regardless of the <a href="admin.php?options/groups/usersAndRegistration/" target="_blank" tabindex="-1">"Enable registration" option</a>.]]></phrase>
+  <phrase title="option_explain.bdapi_consumer_loginRedirect" version_id="2000033" version_string="2.0.0 Beta 3"><![CDATA[Enable this option to forward login request to the remote website configured in "Auto login by Session Init" option above.]]></phrase>
   <phrase title="option_explain.bdapi_consumer_providers" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[]]></phrase>
   <phrase title="option_group.bdApiConsumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[[bd] API Consumer]]></phrase>
   <phrase title="option_group_description.bdApiConsumer" version_id="1000010" version_string="1.0.0 Alpha"><![CDATA[]]></phrase>

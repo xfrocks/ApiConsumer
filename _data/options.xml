@@ -16,6 +16,10 @@ id_sync={{ phrase('bdapi_consumer_auto_register_id_sync') }}</edit_format_params
     <default_value>0</default_value>
     <relation group_id="bdApiConsumer" display_order="110"/>
   </option>
+  <option option_id="bdapi_consumer_loginRedirect" edit_format="onoff" data_type="unsigned_integer">
+    <default_value>0</default_value>
+    <relation group_id="bdApiConsumer" display_order="221"/>
+  </option>
   <option option_id="bdapi_consumer_providers" edit_format="callback" data_type="array">
     <default_value>[]</default_value>
     <edit_format_params>Xfrocks\ApiConsumer\Option\Providers::renderOption</edit_format_params>

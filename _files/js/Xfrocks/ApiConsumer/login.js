@@ -1,6 +1,8 @@
 !function ($, window, document, _undefined) {
     'use strict';
 
+    // ################################################################################
+
     var onIsAuthorizedTimer = null;
 
     XF.Xfrocks_ApiConsumer_Provider = XF.Element.newHandler({
@@ -120,6 +122,8 @@
             console.log.apply(console, logParams);
         }
     });
+
+    // ################################################################################
 
     XF.Element.register('api-consumer-provider', 'XF.Xfrocks_ApiConsumer_Provider');
 

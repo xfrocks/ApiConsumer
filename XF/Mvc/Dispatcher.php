@@ -2,9 +2,8 @@
 
 namespace Xfrocks\ApiConsumer\XF\Mvc;
 
-use XF\Entity\ConnectedAccountProvider;
 use XF\Mvc\Reply\Redirect;
-use Xfrocks\ApiConsumer\ConnectedAccount\Provider;
+use Xfrocks\ApiConsumer\Service\AutoLoginSession;
 
 class Dispatcher extends XFCP_Dispatcher
 {
@@ -17,20 +16,10 @@ class Dispatcher extends XFCP_Dispatcher
             ($session = $app->session()) &&
             !$session->exists() &&
             $session->robot === '') {
-            /** @var ConnectedAccountProvider $provider */
-            $provider = $app->em()->find('XF:ConnectedAccountProvider', $providerId);
-            if (!empty($provider) && $provider->provider_class === Provider::PROVIDER_CLASS) {
-                $requestUri = $this->request->getFullRequestUri();
-                $session->set('connectedAccountRequest', [
-                    'provider' => $provider->provider_id,
-                    'returnUrl' => $requestUri,
-                    'test' => false
-                ]);
-
-                $handler = $provider->handler;
-                $oauth = $handler->getOAuth($handler->getOAuthConfig($provider));
-                $url = $oauth->getAuthorizationUri(['guest_redirect_uri' => $requestUri])->getAbsoluteUri();
-
+            /** @var AutoLoginSession $autoLoginSession */
+            $autoLoginSession = $this->app->service('Xfrocks\ApiConsumer:AutoLoginSession');
+            $url = $autoLoginSession->getRedirectUrl($providerId);
+            if (is_string($url)) {
                 return $this->render(new Redirect($url), 'html');
             }
         }
