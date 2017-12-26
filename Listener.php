@@ -2,15 +2,12 @@
 
 namespace Xfrocks\ApiConsumer;
 
+use XF\App;
 use XF\Container;
 use XF\Entity\User;
-use XF\Mvc\Dispatcher;
-use XF\Mvc\Reply\AbstractReply;
-use XF\Mvc\Reply\Redirect;
-use XF\Mvc\RouteMatch;
 use XF\Session\Session;
 use XF\Template\Templater;
-use Xfrocks\ApiConsumer\Service\RedirectBuilder;
+use Xfrocks\ApiConsumer\Service\AutoLogin;
 
 class Listener
 {
@@ -21,80 +18,6 @@ class Listener
     const SESSION_KEY_LATEST_AUTO_LOGIN_TIME = 'bdapi_consumer_lalt';
     const SESSION_KEY_LOGGED_IN_PROVIDER_ID = 'bdapi_consumer_alpi';
     const SESSION_KEY_USER_CONNECTED_ACCOUNT_FROM_PROVIDER_ID = 'bdapi_consumer_ucafpi';
-
-    private static $preDispatchSessionUserId = null;
-
-    /**
-     * @param Dispatcher $dispatcher
-     * @param RouteMatch $match
-     */
-    public static function dispatcherMatch($dispatcher, $match)
-    {
-        self::$preDispatchSessionUserId = intval(\XF::session()->get('userId'));
-    }
-
-    /**
-     * @param Dispatcher $dispatcher
-     * @param AbstractReply $reply
-     * @param RouteMatch $match
-     * @param RouteMatch $originalMatch
-     */
-    public static function dispatcherPostDispatch($dispatcher, &$reply, $match, $originalMatch)
-    {
-        $userId = intval(\XF::session()->get('userId'));
-        if (self::$preDispatchSessionUserId === $userId) {
-            return;
-        }
-        if (self::$preDispatchSessionUserId > 0 && $userId > 0) {
-            return;
-        }
-
-        if (!($reply instanceof Redirect)) {
-            return;
-        }
-
-        $providers = self::getAutoLoginProviders();
-        if (count($providers) === 0) {
-            return;
-        }
-
-        $action = 'login';
-        $url = \XF::app()->request()->convertToAbsoluteUri($reply->getUrl());
-        if (self::$preDispatchSessionUserId > $userId) {
-            $action = 'logout';
-            $userId = self::$preDispatchSessionUserId;
-        }
-
-        /** @var RedirectBuilder $builder */
-        $builder = \XF::service('Xfrocks\ApiConsumer:RedirectBuilder');
-        $newUrl = $builder->build($providers, $action, $url, $userId);
-
-        $reply->setUrl($newUrl);
-    }
-
-    /**
-     * @return array
-     */
-    private static function getAutoLoginProviders()
-    {
-        static $result = null;
-
-        if ($result === null) {
-            $result = [];
-
-            $providers = \XF::options()->bdapi_consumer_providers;
-            foreach ($providers as $provider) {
-                if (empty($provider['isUsable']) ||
-                    empty($provider['options']['auto_login_js'])) {
-                    continue;
-                }
-
-                $result[$provider['provider_id']] = $provider;
-            }
-        }
-
-        return $result;
-    }
 
     /**
      * @param Container $container
@@ -127,7 +50,12 @@ class Listener
                         return [];
                 }
 
-                $providers = self::getAutoLoginProviders();
+                /** @var App $app */
+                $app = $xf['app'];
+                /** @var AutoLogin $autoLogin */
+                $autoLogin = $app->service('Xfrocks\ApiConsumer:AutoLogin');
+                $providers = $autoLogin->getProviders();
+
                 foreach ($providers as &$providerRef) {
                     $providerRef['sdkJsUrl'] = sprintf(
                         '%s/index.php?assets/sdk.js&%s',
