@@ -118,6 +118,33 @@ class ConnectedAccount extends XFCP_ConnectedAccount
             $userConnectedAccount = $this->associateConnectedAccountWithUser($user, $providerData);
         } catch (\Exception $e) {
             $db->rollback();
+
+            // handle concurrent issue when another duplicate request arrived and auto-registered
+            // just before the current request. It's still unclear what triggered two requests but
+            // it's best if we can recover smoothly. Let's try to do it now... Finger crossed!
+            /** @var \XF\Repository\User $userFinder */
+            $userFinder = $this->em->getFinder('XF:User');
+            /** @var User $dbUser */
+            $dbUser = $userFinder->getUserByNameOrEmail($registration->getUser()->username);
+            if (!empty($dbUser)) {
+                /** @var UserConnectedAccount $dbUserConnectedAccount */
+                $dbUserConnectedAccount = $this->em->findOne('XF:UserConnectedAccount', [
+                    'user_id' => $dbUser->user_id,
+                    'provider_key' => strval($providerData->getProviderKey()),
+                    'provider' => $providerData->getProviderId()
+                ]);
+
+                if (!empty($dbUserConnectedAccount)) {
+                    $logMessage = sprintf(
+                        'Exception while trying to auto-register, recovered successfully with user #%s',
+                        $dbUserConnectedAccount->user_id
+                    );
+                    \XF::logException(new \RuntimeException($logMessage, 0, $e), false, __CLASS__, true);
+
+                    return $dbUserConnectedAccount;
+                }
+            }
+
             throw $e;
         }
 
