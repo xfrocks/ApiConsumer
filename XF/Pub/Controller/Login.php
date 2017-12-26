@@ -40,7 +40,8 @@ class Login extends XFCP_Login
             ($providerId = $xfOptions->bdapi_consumer_autoLoginSession)) {
             /** @var AutoLoginSession $autoLoginSession */
             $autoLoginSession = $this->service('Xfrocks\ApiConsumer:AutoLoginSession');
-            $url = $autoLoginSession->getRedirectUrl($providerId);
+            $redirect = $this->getDynamicRedirectIfNot($this->buildLink('login'));
+            $url = $autoLoginSession->getRedirectUrl($providerId, $redirect);
             if (is_string($url)) {
                 return $this->redirect($url, '');
             }

@@ -10,9 +10,10 @@ class AutoLoginSession extends AbstractService
 {
     /**
      * @param string $providerId
+     * @param null|string $returnUrl
      * @return null|string
      */
-    public function getRedirectUrl($providerId)
+    public function getRedirectUrl($providerId, $returnUrl = null)
     {
         /** @var ConnectedAccountProvider $provider */
         $provider = $this->em()->find('XF:ConnectedAccountProvider', $providerId);
@@ -20,16 +21,20 @@ class AutoLoginSession extends AbstractService
             return null;
         }
 
-        $requestUri = $this->app->request()->getFullRequestUri();
+        $authUriParams = [];
+        if (empty($returnUrl)) {
+            $returnUrl = $this->app->request()->getFullRequestUri();
+            $authUriParams['guest_redirect_uri'] = $returnUrl;
+        }
         $this->app->session()->set('connectedAccountRequest', [
             'provider' => $provider->provider_id,
-            'returnUrl' => $requestUri,
+            'returnUrl' => $returnUrl,
             'test' => false
         ]);
 
         $handler = $provider->handler;
         $oauth = $handler->getOAuth($handler->getOAuthConfig($provider));
-        $url = $oauth->getAuthorizationUri(['guest_redirect_uri' => $requestUri])->getAbsoluteUri();
+        $url = $oauth->getAuthorizationUri($authUriParams)->getAbsoluteUri();
 
         return $url;
     }
