@@ -122,10 +122,10 @@ class ConnectedAccount extends XFCP_ConnectedAccount
             // handle concurrent issue when another duplicate request arrived and auto-registered
             // just before the current request. It's still unclear what triggered two requests but
             // it's best if we can recover smoothly. Let's try to do it now... Finger crossed!
-            /** @var \XF\Repository\User $userFinder */
-            $userFinder = $this->em->getFinder('XF:User');
+            /** @var \XF\Repository\User $userRepo */
+            $userRepo = $this->repository('XF:User');
             /** @var User $dbUser */
-            $dbUser = $userFinder->getUserByNameOrEmail($registration->getUser()->username);
+            $dbUser = $userRepo->getUserByNameOrEmail($registration->getUser()->username);
             if (!empty($dbUser)) {
                 /** @var UserConnectedAccount $dbUserConnectedAccount */
                 $dbUserConnectedAccount = $this->em->findOne('XF:UserConnectedAccount', [
